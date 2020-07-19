@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>3D-Digital Clock</title>
+    <link rel="shortcut icon" href="D:\TechTutor\ui_ux\Digital-3D-Clock\image\clock.svg">
+	<link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flipclock/0.7.8/flipclock.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flipclock/0.7.8/flipclock.js"></script>
+</head>
+<body>  
+
+    <div class="clock">
+    </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+    var clock = $('.clock').FlipClock({
+        clockFace: 'TwelveHourClock'
+    });
+});
+</script>
+
+
+</body>
+</html>
