@@ -1,0 +1,20 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+body {
+    display: flex;
+    margin: 0px 400px auto;
+    align-items: center;
+    min-height: 100vh;
+    background: #D3D3D3;
+}
+.clock{
+    width: auto;
+}
+span .flip-clock-dot{
+    background: black;
+}
+.flip-clock-meridium a {
+    color: #808080 !important;
+}
