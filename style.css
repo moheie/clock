@@ -1,20 +1,254 @@
-*{
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
+
 body {
     display: flex;
-    margin: 0px 400px auto;
+    justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: #D3D3D3;
+    background: url('https://i.pinimg.com/originals/63/ca/65/63ca65a0fcf1dd9edcb8f060372abda9.gif') center center / cover no-repeat;
+    background-attachment: fixed;
+    font-family: 'Arial', sans-serif;
+    overflow: hidden;
+    position: relative;
 }
-.clock{
-    width: auto;
+
+/* Add overlay for better readability */
+body::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+    z-index: 1;
 }
-span .flip-clock-dot{
-    background: black;
+
+.container {
+    text-align: center;
+    position: relative;
+    z-index: 2;
 }
+
+/* Fullscreen button styling */
+.fullscreen-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.9);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.fullscreen-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.fullscreen-btn:active {
+    transform: scale(0.95);
+}
+
+.fullscreen-btn svg {
+    transition: all 0.3s ease;
+}
+
+.title {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 3rem;
+    font-weight: 300;
+    margin-bottom: 30px;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    letter-spacing: 2px;
+    animation: titleGlow 4s ease-in-out infinite alternate;
+}
+
+@keyframes titleGlow {
+    from { text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 255, 255, 0.2); }
+    to { text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 255, 255, 0.4); }
+}
+
+/* Add animated background particles */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.3), transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.2), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.4), transparent),
+        radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.3), transparent),
+        radial-gradient(2px 2px at 160px 30px, rgba(255,255,255,0.2), transparent);
+    background-repeat: repeat;
+    background-size: 200px 100px;
+    animation: sparkle 8s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes sparkle {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-100px); }
+}
+
+.clock {
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.4),
+        0 0 80px rgba(255, 255, 255, 0.1);
+    position: relative;
+    transform: perspective(1000px) rotateX(5deg);
+    transition: all 0.3s ease;
+    z-index: 2;
+}
+
+.clock:hover {
+    transform: perspective(1000px) rotateX(0deg) scale(1.02);
+    box-shadow: 
+        0 30px 60px rgba(0, 0, 0, 0.5),
+        0 0 100px rgba(255, 255, 255, 0.2);
+}
+
+/* Enhanced flip clock styling */
+.flip-clock-wrapper {
+    text-align: center;
+}
+
+.flip-clock-wrapper ul {
+    position: relative;
+    margin: 5px;
+    width: 80px;
+    height: 120px;
+    font-size: 80px;
+    font-weight: bold;
+    line-height: 120px;
+    border-radius: 10px;
+    background: linear-gradient(145deg, #2c3e50, #34495e);
+    box-shadow: 
+        inset 0 -2px 4px rgba(0, 0, 0, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.1),
+        0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.flip-clock-wrapper ul li {
+    color: #ecf0f1;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.flip-clock-wrapper ul li a div div.inn {
+    background: linear-gradient(145deg, #2c3e50, #34495e);
+    border-radius: 10px;
+}
+
+.flip-clock-wrapper ul li a div.up:after {
+    background: linear-gradient(145deg, #34495e, #2c3e50);
+    border-radius: 10px 10px 0 0;
+}
+
+.flip-clock-wrapper ul li a div.down {
+    background: linear-gradient(145deg, #2c3e50, #34495e);
+    border-radius: 0 0 10px 10px;
+}
+
+.flip-clock-dot {
+    background: #e74c3c !important;
+    border-radius: 50%;
+    box-shadow: 
+        0 0 20px rgba(231, 76, 60, 0.6),
+        0 0 40px rgba(231, 76, 60, 0.3);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+}
+
 .flip-clock-meridium a {
-    color: #808080 !important;
+    color: #ecf0f1 !important;
+    font-weight: bold;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    font-size: 24px;
+}
+
+/* Add glow effect */
+.flip-clock-wrapper ul:nth-child(odd) {
+    animation: glow-blue 3s ease-in-out infinite alternate;
+}
+
+.flip-clock-wrapper ul:nth-child(even) {
+    animation: glow-purple 3s ease-in-out infinite alternate;
+}
+
+@keyframes glow-blue {
+    from { box-shadow: 
+        inset 0 -2px 4px rgba(0, 0, 0, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.1),
+        0 5px 15px rgba(0, 0, 0, 0.2),
+        0 0 30px rgba(52, 152, 219, 0.3);
+    }
+    to { box-shadow: 
+        inset 0 -2px 4px rgba(0, 0, 0, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.1),
+        0 5px 15px rgba(0, 0, 0, 0.2),
+        0 0 30px rgba(52, 152, 219, 0.6);
+    }
+}
+
+@keyframes glow-purple {
+    from { box-shadow: 
+        inset 0 -2px 4px rgba(0, 0, 0, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.1),
+        0 5px 15px rgba(0, 0, 0, 0.2),
+        0 0 30px rgba(155, 89, 182, 0.3);
+    }
+    to { box-shadow: 
+        inset 0 -2px 4px rgba(0, 0, 0, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.1),
+        0 5px 15px rgba(0, 0, 0, 0.2),
+        0 0 30px rgba(155, 89, 182, 0.6);
+    }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .clock {
+        padding: 20px;
+        margin: 20px;
+    }
+    
+    .flip-clock-wrapper ul {
+        width: 60px;
+        height: 90px;
+        font-size: 60px;
+        line-height: 90px;
+        margin: 3px;
+    }
+    
+    .flip-clock-meridium a {
+        font-size: 18px;
+    }
 }
