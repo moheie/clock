@@ -9,20 +9,255 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flipclock/0.7.8/flipclock.js"></script>
 </head>
-<body>  
-    <div class="container">
+<body>    <div class="container">
         <button id="fullscreenBtn" class="fullscreen-btn" title="Toggle Fullscreen">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
             </svg>
         </button>
-        <div class="clock">
-        </div>
+        <button id="pipBtn" class="pip-btn" title="Picture-in-Picture Mode">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14zm-10-7h9v6h-9z"/>
+            </svg>
+        </button>        <div class="clock">
+        </div>        <!-- Hidden canvas and video elements for PiP functionality -->
+        <canvas id="clockCanvas" width="600" height="300" style="display: none;"></canvas>
+        <video id="pipVideo" style="display: none;" muted autoplay loop playsinline></video>
     </div>
-<script type="text/javascript">
-    $(document).ready(function () {
+<script type="text/javascript">    $(document).ready(function () {
         var clock = $('.clock').FlipClock({
             clockFace: 'TwelveHourClock'
+        });
+
+        // Canvas and PiP variables
+        const canvas = document.getElementById('clockCanvas');
+        const ctx = canvas.getContext('2d');
+        const video = document.getElementById('pipVideo');
+        let stream = null;
+        let isPiPActive = false;        // Function to draw clock on canvas for PiP
+        function drawClockOnCanvas() {
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Get current time
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // 0 should be 12
+
+            // Draw animated cosmic background matching the main page
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, '#263d65');
+            gradient.addColorStop(1, '#000000');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+
+            for (let i = 0; i < 30; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                const size = Math.random() * 3;
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Draw glass morphism container background (larger and more prominent)
+            const containerX = 40;
+            const containerY = 60;
+            const containerWidth = canvas.width - 80;
+            const containerHeight = canvas.height - 120;
+
+            // Glass container with blur effect (matching main design)
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+            ctx.beginPath();
+            ctx.roundRect(containerX, containerY, containerWidth, containerHeight, 20);
+            ctx.fill();
+
+            // Glass container border
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            // Draw flip-style digits (much larger to match main clock)
+            const timeArray = [
+                hours.toString().padStart(2, '0')[0],
+                hours.toString().padStart(2, '0')[1],
+                minutes.toString().padStart(2, '0')[0],
+                minutes.toString().padStart(2, '0')[1],
+                seconds.toString().padStart(2, '0')[0],
+                seconds.toString().padStart(2, '0')[1]
+            ];
+
+            // Much larger dimensions to match the main clock
+            const digitWidth = 65;
+            const digitHeight = 90;
+            const digitSpacing = 8;
+            const colonWidth = 15;
+            const totalWidth = (timeArray.length * digitWidth) + (5 * digitSpacing) + (2 * colonWidth);
+            const startX = (canvas.width - totalWidth) / 2;
+
+            timeArray.forEach((digit, index) => {
+                let x = startX + index * (digitWidth + digitSpacing);
+                
+                // Add space for colons
+                if (index >= 2) x += colonWidth;
+                if (index >= 4) x += colonWidth;
+
+                const y = (canvas.height - digitHeight) / 2;
+
+                // Draw digit background (flip card style) - matching main design exactly
+                const digitGradient = ctx.createLinearGradient(x, y, x, y + digitHeight);
+                digitGradient.addColorStop(0, '#34495e');
+                digitGradient.addColorStop(1, '#2c3e50');
+                ctx.fillStyle = digitGradient;
+                
+                // Rounded rectangle for digit
+                ctx.beginPath();
+                ctx.roundRect(x, y, digitWidth, digitHeight, 10);
+                ctx.fill();
+
+                // Add inset shadow effect
+                ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Add highlight
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+
+                // Draw digit text (larger font to match main clock)
+                ctx.fillStyle = '#ecf0f1';
+                ctx.font = 'bold 54px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+                ctx.shadowBlur = 2;
+                ctx.fillText(digit, x + digitWidth/2, y + digitHeight/2);
+
+                // Add alternating glow effect (matching main design)
+                ctx.shadowColor = index % 2 === 0 ? '#3498db' : '#9b59b6';
+                ctx.shadowBlur = 8;
+                ctx.fillText(digit, x + digitWidth/2, y + digitHeight/2);
+                ctx.shadowBlur = 0;
+            });
+
+            // Draw colons (dots) - larger and more prominent
+            ctx.fillStyle = '#e74c3c';
+            ctx.shadowColor = '#e74c3c';
+            ctx.shadowBlur = 15;
+            
+            // First colon (between hours and minutes)
+            const colon1X = startX + 2 * (digitWidth + digitSpacing) + colonWidth/2;
+            const colonY = canvas.height / 2;
+            ctx.beginPath();
+            ctx.arc(colon1X, colonY - 12, 5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(colon1X, colonY + 12, 5, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Second colon (between minutes and seconds)
+            const colon2X = startX + 4 * (digitWidth + digitSpacing) + colonWidth + colonWidth/2;
+            ctx.beginPath();
+            ctx.arc(colon2X, colonY - 12, 5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(colon2X, colonY + 12, 5, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.shadowBlur = 0;
+
+            // Draw AM/PM (larger and better positioned)
+            ctx.fillStyle = '#ecf0f1';
+            ctx.font = 'bold 24px Arial';
+            ctx.textAlign = 'center';
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+            ctx.shadowBlur = 2;
+            ctx.fillText(ampm, canvas.width / 2, canvas.height - 40);
+            ctx.shadowBlur = 0;
+        }// Initialize canvas stream
+        function initCanvasStream() {
+            if (!stream) {
+                // Start drawing on canvas first
+                drawClockOnCanvas();
+                
+                // Create stream from canvas
+                stream = canvas.captureStream(30); // 30 FPS
+                video.srcObject = stream;
+                
+                // Ensure video is ready
+                video.play().catch(e => console.log('Video play failed:', e));
+            }
+        }
+
+        // Update canvas every second for PiP
+        let pipInterval;
+        function startPipUpdates() {
+            if (pipInterval) clearInterval(pipInterval);
+            pipInterval = setInterval(drawClockOnCanvas, 1000);
+        }
+
+        function stopPipUpdates() {
+            if (pipInterval) {
+                clearInterval(pipInterval);
+                pipInterval = null;
+            }
+        }        // Picture-in-Picture functionality
+        $('#pipBtn').click(async function() {
+            if (!document.pictureInPictureEnabled) {
+                alert('Picture-in-Picture is not supported in this browser');
+                return;
+            }
+
+            try {
+                if (!isPiPActive) {
+                    // Initialize the canvas stream
+                    initCanvasStream();
+                    startPipUpdates();
+                    
+                    // Wait a moment for video to be ready
+                    setTimeout(async () => {
+                        try {
+                            await video.requestPictureInPicture();
+                        } catch (err) {
+                            console.error('PiP request failed:', err);
+                            alert('Failed to start Picture-in-Picture mode');
+                            stopPipUpdates();
+                        }
+                    }, 100);
+                } else {
+                    try {
+                        await document.exitPictureInPicture();
+                    } catch (err) {
+                        console.error('Exit PiP failed:', err);
+                    }
+                }
+            } catch (error) {
+                console.error('Error with Picture-in-Picture:', error);
+                alert('Picture-in-Picture is not available');
+            }
+        });        // Handle PiP events
+        video.addEventListener('enterpictureinpicture', function() {
+            console.log('Entered Picture-in-Picture mode');
+            isPiPActive = true;
+            $('#pipBtn').find('path').attr('d', 'M19 7h-8v6h8V7zm2-4H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14z');
+            $('#pipBtn').attr('title', 'Exit Picture-in-Picture');
+        });
+
+        video.addEventListener('leavepictureinpicture', function() {
+            console.log('Left Picture-in-Picture mode');
+            isPiPActive = false;
+            stopPipUpdates();
+            $('#pipBtn').find('path').attr('d', 'M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14zm-10-7h9v6h-9z');
+            $('#pipBtn').attr('title', 'Picture-in-Picture Mode');
+        });        // Error handling for video
+        video.addEventListener('error', function(e) {
+            console.error('Video error:', e);
         });
 
         // Fullscreen functionality
@@ -52,11 +287,14 @@
             }
         });
 
-        // Keyboard shortcut (F11 or F)
+        // Keyboard shortcuts (F11 or F for fullscreen, P for PiP)
         document.addEventListener('keydown', function(e) {
             if (e.key === 'F11' || e.key === 'f' || e.key === 'F') {
                 e.preventDefault();
                 $('#fullscreenBtn').click();
+            } else if (e.key === 'p' || e.key === 'P') {
+                e.preventDefault();
+                $('#pipBtn').click();
             }
         });
     });
