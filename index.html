@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
+<head>	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>3D-Digital Clock</title>
     <link rel="shortcut icon" href=".\image\clock.svg">
 	<link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flipclock/0.7.8/flipclock.css" rel="stylesheet" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flipclock/0.7.8/flipclock.js"></script>
@@ -14,13 +15,121 @@
             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
             </svg>
-        </button>
-        <button id="pipBtn" class="pip-btn" title="Picture-in-Picture Mode">
+        </button>        <button id="pipBtn" class="pip-btn" title="Picture-in-Picture Mode">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14zm-10-7h9v6h-9z"/>
             </svg>
-        </button>        <div class="clock">
-        </div>        <!-- Hidden canvas and video elements for PiP functionality -->
+        </button>
+        
+        <button id="alarmBtn" class="alarm-btn" title="Set Alarm">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M22 5.72l-4.6-3.86-1.29 1.53 4.6 3.86L22 5.72zM7.88 3.39L6.6 1.86 2 5.71l1.29 1.53 4.59-3.85zM12.5 8H11v6l4.75 2.85.75-1.23-4-2.37V8zM12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 16c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
+            </svg>
+        </button>
+        
+        <button id="prayerBtn" class="prayer-btn" title="Prayer Times">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1L9 7V9H7V11H9L13 15L17 11H19V9H21ZM13 1L19 7H17L13 3L9 7H7L13 1Z"/>
+            </svg>
+        </button>
+
+        <div class="clock">
+        </div>
+        
+        <div class="date-display">
+            <div id="currentDate" class="current-date"></div>
+        </div>
+        
+        <!-- Alarm Modal -->
+        <div id="alarmModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Set Alarm</h2>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="alarm-form">
+                        <div class="form-group">
+                            <label for="alarmTime">Time:</label>
+                            <input type="time" id="alarmTime" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="alarmLabel">Label:</label>
+                            <input type="text" id="alarmLabel" placeholder="Wake up call">
+                        </div>
+                        <div class="form-group">
+                            <label for="alarmSound">Sound:</label>
+                            <select id="alarmSound">
+                                <option value="default">Default Beep</option>
+                                <option value="gentle">Gentle Bell</option>
+                                <option value="classic">Classic Alarm</option>
+                                <option value="nature">Nature Sounds</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="alarmRepeat"> Repeat daily
+                            </label>
+                        </div>
+                        <button id="setAlarm" class="btn-primary">Set Alarm</button>
+                    </div>
+                    <div class="active-alarms">
+                        <h3>Active Alarms</h3>
+                        <div id="alarmList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Prayer Times Modal -->
+        <div id="prayerModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Prayer Times</h2>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="location-setup">
+                        <div class="form-group">
+                            <label for="cityInput">City:</label>
+                            <input type="text" id="cityInput" placeholder="Enter your city">
+                            <button id="getLocation" class="btn-secondary">Use Current Location</button>
+                        </div>
+                    </div>
+                    <div id="prayerTimes" class="prayer-times-display">
+                        <div class="prayer-item">
+                            <span class="prayer-name">Fajr</span>
+                            <span class="prayer-time" id="fajrTime">--:--</span>
+                        </div>
+                        <div class="prayer-item">
+                            <span class="prayer-name">Sunrise</span>
+                            <span class="prayer-time" id="sunriseTime">--:--</span>
+                        </div>
+                        <div class="prayer-item">
+                            <span class="prayer-name">Dhuhr</span>
+                            <span class="prayer-time" id="dhuhrTime">--:--</span>
+                        </div>
+                        <div class="prayer-item">
+                            <span class="prayer-name">Asr</span>
+                            <span class="prayer-time" id="asrTime">--:--</span>
+                        </div>
+                        <div class="prayer-item">
+                            <span class="prayer-name">Maghrib</span>
+                            <span class="prayer-time" id="maghribTime">--:--</span>
+                        </div>
+                        <div class="prayer-item">
+                            <span class="prayer-name">Isha</span>
+                            <span class="prayer-time" id="ishaTime">--:--</span>
+                        </div>
+                        <div class="next-prayer">
+                            <div>Next Prayer: <span id="nextPrayerName">--</span></div>
+                            <div>Time: <span id="nextPrayerTime">--:--</span></div>
+                            <div>Remaining: <span id="timeRemaining">--:--:--</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- Hidden canvas and video elements for PiP functionality -->
         <canvas id="clockCanvas" width="600" height="300" style="display: none;"></canvas>
         <video id="pipVideo" style="display: none;" muted autoplay loop playsinline></video>
     </div>
@@ -28,6 +137,340 @@
         var clock = $('.clock').FlipClock({
             clockFace: 'TwelveHourClock'
         });
+
+        // Global variables for new features
+        let alarms = JSON.parse(localStorage.getItem('clockAlarms') || '[]');
+        let prayerTimes = {};
+        let currentLocation = { city: '', lat: 0, lng: 0 };
+
+        // Update date display
+        function updateDate() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', options);
+        }        // Initialize date display and update every minute
+        updateDate();
+        setInterval(updateDate, 60000);
+
+        // ALARM FUNCTIONALITY
+        function saveAlarms() {
+            localStorage.setItem('clockAlarms', JSON.stringify(alarms));
+        }
+
+        function renderAlarms() {
+            const alarmList = document.getElementById('alarmList');
+            alarmList.innerHTML = '';
+            
+            if (alarms.length === 0) {
+                alarmList.innerHTML = '<p style="color: rgba(255,255,255,0.6); text-align: center;">No active alarms</p>';
+                return;
+            }
+
+            alarms.forEach((alarm, index) => {
+                const alarmDiv = document.createElement('div');
+                alarmDiv.className = 'alarm-item';
+                alarmDiv.innerHTML = `
+                    <div class="alarm-info">
+                        <div class="alarm-time">${alarm.time}</div>
+                        <div class="alarm-label">${alarm.label}</div>
+                        ${alarm.repeat ? '<small style="color: #3498db;">Repeats daily</small>' : ''}
+                    </div>
+                    <button class="alarm-delete" onclick="deleteAlarm(${index})">Delete</button>
+                `;
+                alarmList.appendChild(alarmDiv);
+            });
+        }
+
+        function deleteAlarm(index) {
+            alarms.splice(index, 1);
+            saveAlarms();
+            renderAlarms();
+        }
+
+        // Make deleteAlarm globally accessible
+        window.deleteAlarm = deleteAlarm;
+
+        function checkAlarms() {
+            const now = new Date();
+            const currentTime = now.getHours().toString().padStart(2, '0') + ':' + 
+                               now.getMinutes().toString().padStart(2, '0');
+
+            alarms.forEach((alarm, index) => {
+                if (alarm.time === currentTime && !alarm.triggered) {
+                    // Trigger alarm
+                    playAlarmSound(alarm.sound);
+                    showAlarmNotification(alarm);
+                    
+                    if (!alarm.repeat) {
+                        alarms.splice(index, 1);
+                        saveAlarms();
+                        renderAlarms();
+                    } else {
+                        alarm.triggered = true;
+                        // Reset trigger after a minute
+                        setTimeout(() => {
+                            alarm.triggered = false;
+                        }, 60000);
+                    }
+                }
+            });
+        }
+
+        function playAlarmSound(soundType) {
+            // Create audio context for alarm sounds
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            let frequency = 800;
+            let duration = 0.3;
+            
+            switch(soundType) {
+                case 'gentle':
+                    frequency = 600;
+                    duration = 0.5;
+                    break;
+                case 'classic':
+                    frequency = 1000;
+                    duration = 0.2;
+                    break;
+                case 'nature':
+                    frequency = 400;
+                    duration = 0.8;
+                    break;
+                default:
+                    frequency = 800;
+                    duration = 0.3;
+            }
+
+            // Play alarm sound
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.value = frequency;
+                    oscillator.type = 'sine';
+                    
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + duration);
+                }, i * 500);
+            }
+        }
+
+        function showAlarmNotification(alarm) {
+            if (Notification.permission === 'granted') {
+                new Notification('Alarm: ' + alarm.label, {
+                    body: 'Time: ' + alarm.time,
+                    icon: './image/clock.svg'
+                });
+            } else {
+                alert(`Alarm: ${alarm.label}\nTime: ${alarm.time}`);
+            }
+        }
+
+        // Check alarms every minute
+        setInterval(checkAlarms, 60000);        // PRAYER TIMES FUNCTIONALITY
+        async function getPrayerTimes(city, lat, lng) {
+            try {
+                let url;
+                if (city) {
+                    url = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=&method=4`;
+                } else {
+                    url = `https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lng}&method=4`;
+                }
+
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.code === 200) {
+                    prayerTimes = data.data.timings;
+                    updatePrayerTimesDisplay();
+                    updateNextPrayer();
+                } else {
+                    throw new Error('Failed to fetch prayer times');
+                }
+            } catch (error) {
+                console.error('Error fetching prayer times:', error);
+                alert('Error fetching prayer times. Please check your internet connection.');
+            }
+        }
+
+        function updatePrayerTimesDisplay() {
+            document.getElementById('fajrTime').textContent = formatTime(prayerTimes.Fajr);
+            document.getElementById('sunriseTime').textContent = formatTime(prayerTimes.Sunrise);
+            document.getElementById('dhuhrTime').textContent = formatTime(prayerTimes.Dhuhr);
+            document.getElementById('asrTime').textContent = formatTime(prayerTimes.Asr);
+            document.getElementById('maghribTime').textContent = formatTime(prayerTimes.Maghrib);
+            document.getElementById('ishaTime').textContent = formatTime(prayerTimes.Isha);
+        }
+
+        function updateNextPrayer() {
+            const now = new Date();
+            const currentTime = now.getHours() * 60 + now.getMinutes();
+            
+            const prayers = [
+                { name: 'Fajr', time: prayerTimes.Fajr },
+                { name: 'Sunrise', time: prayerTimes.Sunrise },
+                { name: 'Dhuhr', time: prayerTimes.Dhuhr },
+                { name: 'Asr', time: prayerTimes.Asr },
+                { name: 'Maghrib', time: prayerTimes.Maghrib },
+                { name: 'Isha', time: prayerTimes.Isha }
+            ];
+
+            let nextPrayer = null;
+            let minDiff = Infinity;
+
+            prayers.forEach(prayer => {
+                const prayerMinutes = timeToMinutes(prayer.time);
+                let diff = prayerMinutes - currentTime;
+                
+                if (diff < 0) {
+                    diff += 24 * 60; // Next day
+                }
+                
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    nextPrayer = prayer;
+                }
+            });
+
+            if (nextPrayer) {
+                document.getElementById('nextPrayerName').textContent = nextPrayer.name;
+                document.getElementById('nextPrayerTime').textContent = formatTime(nextPrayer.time);
+                
+                const hours = Math.floor(minDiff / 60);
+                const minutes = minDiff % 60;
+                document.getElementById('timeRemaining').textContent = 
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00`;
+            }
+        }
+
+        function timeToMinutes(timeStr) {
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            return hours * 60 + minutes;
+        }
+
+        function formatTime(timeStr) {
+            const [hours, minutes] = timeStr.split(':');
+            const hour24 = parseInt(hours);
+            const hour12 = hour24 === 0 ? 12 : hour24 > 12 ? hour24 - 12 : hour24;
+            const ampm = hour24 >= 12 ? 'PM' : 'AM';
+            return `${hour12}:${minutes} ${ampm}`;
+        }
+
+        // Update prayer times every hour
+        setInterval(() => {
+            if (currentLocation.city || (currentLocation.lat && currentLocation.lng)) {
+                getPrayerTimes(currentLocation.city, currentLocation.lat, currentLocation.lng);
+            }
+        }, 3600000);        // Update next prayer every minute
+        setInterval(updateNextPrayer, 60000);        // EVENT LISTENERS
+        // Alarm modal
+        $('#alarmBtn').click(function() {
+            document.getElementById('alarmModal').style.display = 'block';
+            document.body.classList.add('modal-open');
+            renderAlarms();
+        });
+
+        // Prayer modal
+        $('#prayerBtn').click(function() {
+            document.getElementById('prayerModal').style.display = 'block';
+            document.body.classList.add('modal-open');
+        });
+
+        // Close modals
+        $('.close').click(function() {
+            $('.modal').hide();
+            document.body.classList.remove('modal-open');
+        });
+
+        // Close modal when clicking outside
+        $(window).click(function(event) {
+            if (event.target.classList.contains('modal')) {
+                $('.modal').hide();
+                document.body.classList.remove('modal-open');
+            }
+        });
+
+        // Set alarm
+        $('#setAlarm').click(function() {
+            const time = document.getElementById('alarmTime').value;
+            const label = document.getElementById('alarmLabel').value || 'Alarm';
+            const sound = document.getElementById('alarmSound').value;
+            const repeat = document.getElementById('alarmRepeat').checked;
+
+            if (!time) {
+                alert('Please select a time for the alarm');
+                return;
+            }
+
+            // Check if alarm already exists
+            const exists = alarms.some(alarm => alarm.time === time);
+            if (exists) {
+                alert('An alarm already exists for this time');
+                return;
+            }
+
+            alarms.push({ time, label, sound, repeat, triggered: false });
+            saveAlarms();
+            renderAlarms();
+
+            // Reset form
+            document.getElementById('alarmTime').value = '';
+            document.getElementById('alarmLabel').value = '';
+            document.getElementById('alarmSound').value = 'default';
+            document.getElementById('alarmRepeat').checked = false;
+
+            alert('Alarm set successfully!');
+        });
+
+        // Get current location for prayer times
+        $('#getLocation').click(function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        currentLocation.lat = position.coords.latitude;
+                        currentLocation.lng = position.coords.longitude;
+                        currentLocation.city = '';
+                        document.getElementById('cityInput').value = 'Using current location...';
+                        getPrayerTimes('', currentLocation.lat, currentLocation.lng);
+                    },
+                    function(error) {
+                        alert('Error getting location: ' + error.message);
+                    }
+                );
+            } else {
+                alert('Geolocation is not supported by this browser');
+            }
+        });
+
+        // Update prayer times automatically when city is entered
+        $('#cityInput').on('change', function() {
+            const city = $(this).val().trim();
+            if (city && city !== 'Using current location...') {
+                currentLocation.city = city;
+                currentLocation.lat = 0;
+                currentLocation.lng = 0;
+                getPrayerTimes(currentLocation.city, null, null);
+            }
+        });
+
+        // Request notification permission
+        if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+            Notification.requestPermission();
+        }
+
+        // Initialize with saved data
+        renderAlarms();
 
         // Canvas and PiP variables
         const canvas = document.getElementById('clockCanvas');
@@ -285,9 +728,7 @@
                 svg.setAttribute('d', 'M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z');
                 btn.title = 'Toggle Fullscreen';
             }
-        });
-
-        // Keyboard shortcuts (F11 or F for fullscreen, P for PiP)
+        });        // Keyboard shortcuts (F11 or F for fullscreen, P for PiP, A for Alarm, R for Prayer)
         document.addEventListener('keydown', function(e) {
             if (e.key === 'F11' || e.key === 'f' || e.key === 'F') {
                 e.preventDefault();
@@ -295,6 +736,14 @@
             } else if (e.key === 'p' || e.key === 'P') {
                 e.preventDefault();
                 $('#pipBtn').click();
+            } else if (e.key === 'a' || e.key === 'A') {
+                e.preventDefault();
+                $('#alarmBtn').click();
+            } else if (e.key === 'r' || e.key === 'R') {
+                e.preventDefault();
+                $('#prayerBtn').click();            } else if (e.key === 'Escape') {
+                $('.modal').hide();
+                document.body.classList.remove('modal-open');
             }
         });
     });

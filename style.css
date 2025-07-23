@@ -11,7 +11,7 @@ body {
     min-height: 100vh;
     background: url('https://i.pinimg.com/originals/63/ca/65/63ca65a0fcf1dd9edcb8f060372abda9.gif') center center / cover no-repeat;
     background-attachment: fixed;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Montserrat', 'Roboto', 'Arial', sans-serif;
     overflow: hidden;
     position: relative;
 }
@@ -24,9 +24,25 @@ body::after {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, 
+                rgba(0, 0, 0, 0.5) 0%, 
+                rgba(15, 23, 42, 0.6) 50%, 
+                rgba(0, 0, 0, 0.5) 100%);
+    animation: gradientShift 15s ease infinite;
     pointer-events: none;
     z-index: 1;
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 .container {
@@ -35,89 +51,72 @@ body::after {
     z-index: 2;
 }
 
-/* Fullscreen button styling */
+/* Control buttons common styling */
+.fullscreen-btn,
+.pip-btn,
+.alarm-btn,
+.prayer-btn {
+    position: fixed;
+    right: 20px;
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    border-radius: 50%;
+    width: 54px;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.95);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), 0 0 15px rgba(99, 102, 241, 0.15);
+}
+
 .fullscreen-btn {
-    position: fixed;
     top: 20px;
-    right: 20px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: rgba(255, 255, 255, 0.9);
-    transition: all 0.3s ease;
-    z-index: 1000;
 }
 
-.fullscreen-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.4);
-    transform: scale(1.1);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-.fullscreen-btn:active {
-    transform: scale(0.95);
-}
-
-.fullscreen-btn svg {
-    transition: all 0.3s ease;
-}
-
-/* Picture-in-Picture button styling */
 .pip-btn {
-    position: fixed;
-    top: 80px;
-    right: 20px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: rgba(255, 255, 255, 0.9);
-    transition: all 0.3s ease;
-    z-index: 1000;
+    top: 84px;
 }
 
+.fullscreen-btn:hover,
 .pip-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.4);
-    transform: scale(1.1);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    background: rgba(15, 23, 42, 0.8);
+    border-color: rgba(99, 102, 241, 0.5);
+    transform: scale(1.08) translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25), 0 0 20px rgba(99, 102, 241, 0.3);
+    color: #c7d2fe;
 }
 
+.fullscreen-btn:active,
 .pip-btn:active {
     transform: scale(0.95);
 }
 
+.fullscreen-btn svg,
 .pip-btn svg {
     transition: all 0.3s ease;
+    width: 26px;
+    height: 26px;
 }
 
 .title {
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 0.95);
     font-size: 3rem;
-    font-weight: 300;
-    margin-bottom: 30px;
-    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    letter-spacing: 2px;
+    font-weight: 600;
+    margin-bottom: 34px;
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.4), 0 0 30px rgba(99, 102, 241, 0.3);
+    letter-spacing: 3px;
+    font-family: 'Montserrat', sans-serif;
     animation: titleGlow 4s ease-in-out infinite alternate;
 }
 
 @keyframes titleGlow {
-    from { text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 255, 255, 0.2); }
-    to { text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 255, 255, 0.4); }
+    from { text-shadow: 0 4px 10px rgba(0, 0, 0, 0.4), 0 0 30px rgba(99, 102, 241, 0.3); }
+    to { text-shadow: 0 4px 10px rgba(0, 0, 0, 0.4), 0 0 45px rgba(99, 102, 241, 0.6); }
 }
 
 /* Add animated background particles */
@@ -129,150 +128,595 @@ body::before {
     width: 100%;
     height: 100%;
     background-image: 
-        radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.3), transparent),
-        radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.2), transparent),
-        radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.4), transparent),
-        radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.3), transparent),
-        radial-gradient(2px 2px at 160px 30px, rgba(255,255,255,0.2), transparent);
+        radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.4), transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(99,102,241,0.3), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.5), transparent),
+        radial-gradient(1.5px 1.5px at 130px 80px, rgba(139,92,246,0.4), transparent),
+        radial-gradient(2px 2px at 160px 30px, rgba(255,255,255,0.3), transparent),
+        radial-gradient(2px 2px at 200px 100px, rgba(99,102,241,0.4), transparent),
+        radial-gradient(1px 1px at 300px 60px, rgba(255,255,255,0.5), transparent);
     background-repeat: repeat;
-    background-size: 200px 100px;
-    animation: sparkle 8s linear infinite;
+    background-size: 350px 200px;
+    animation: sparkle 12s linear infinite;
     pointer-events: none;
 }
 
 @keyframes sparkle {
     0% { transform: translateY(0px); }
-    100% { transform: translateY(-100px); }
+    100% { transform: translateY(-200px); }
 }
 
 .clock {
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 20px;
-    padding: 40px;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 24px;
+    padding: 42px;
     box-shadow: 
-        0 20px 40px rgba(0, 0, 0, 0.4),
-        0 0 80px rgba(255, 255, 255, 0.1);
+        0 20px 40px rgba(0, 0, 0, 0.5),
+        0 0 100px rgba(99, 102, 241, 0.15),
+        inset 0 0 2px rgba(255, 255, 255, 0.2);
     position: relative;
-    transform: perspective(1000px) rotateX(5deg);
-    transition: all 0.3s ease;
+    transform: perspective(1200px) rotateX(3deg);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     z-index: 2;
 }
 
 .clock:hover {
-    transform: perspective(1000px) rotateX(0deg) scale(1.02);
+    transform: perspective(1200px) rotateX(0deg) scale(1.03);
     box-shadow: 
-        0 30px 60px rgba(0, 0, 0, 0.5),
-        0 0 100px rgba(255, 255, 255, 0.2);
+        0 30px 70px rgba(0, 0, 0, 0.6),
+        0 0 120px rgba(99, 102, 241, 0.25),
+        inset 0 0 3px rgba(255, 255, 255, 0.3);
 }
 
 /* Enhanced flip clock styling */
 .flip-clock-wrapper {
     text-align: center;
+    margin: 0 !important;
 }
 
 .flip-clock-wrapper ul {
     position: relative;
-    margin: 5px;
+    margin: 6px 3px;
     width: 80px;
     height: 120px;
     font-size: 80px;
     font-weight: bold;
     line-height: 120px;
-    border-radius: 10px;
-    background: linear-gradient(145deg, #2c3e50, #34495e);
+    border-radius: 16px;
+    background: linear-gradient(145deg, #1e293b, #334155);
     box-shadow: 
-        inset 0 -2px 4px rgba(0, 0, 0, 0.3),
-        inset 0 2px 4px rgba(255, 255, 255, 0.1),
-        0 5px 15px rgba(0, 0, 0, 0.2);
+        inset 0 -3px 6px rgba(0, 0, 0, 0.4),
+        inset 0 3px 6px rgba(255, 255, 255, 0.1),
+        0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .flip-clock-wrapper ul li {
-    color: #ecf0f1;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    color: #f1f5f9;
+    text-shadow: 0 3px 5px rgba(0, 0, 0, 0.4);
+    font-family: 'Roboto', sans-serif;
 }
 
 .flip-clock-wrapper ul li a div div.inn {
-    background: linear-gradient(145deg, #2c3e50, #34495e);
-    border-radius: 10px;
+    background: linear-gradient(145deg, #1e293b, #334155);
+    border-radius: 16px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    color: #f8fafc;
 }
 
 .flip-clock-wrapper ul li a div.up:after {
-    background: linear-gradient(145deg, #34495e, #2c3e50);
-    border-radius: 10px 10px 0 0;
+    background: linear-gradient(145deg, #334155, #1e293b);
+    height: 3px;
+    border-radius: 16px 16px 0 0;
 }
 
 .flip-clock-wrapper ul li a div.down {
-    background: linear-gradient(145deg, #2c3e50, #34495e);
-    border-radius: 0 0 10px 10px;
+    background: linear-gradient(145deg, #1e293b, #334155);
+    border-radius: 0 0 16px 16px;
 }
 
 .flip-clock-dot {
-    background: #e74c3c !important;
+    background: #6366f1 !important;
     border-radius: 50%;
+    width: 8px;
+    height: 8px;
     box-shadow: 
-        0 0 20px rgba(231, 76, 60, 0.6),
-        0 0 40px rgba(231, 76, 60, 0.3);
+        0 0 20px rgba(99, 102, 241, 0.7),
+        0 0 40px rgba(99, 102, 241, 0.4);
     animation: pulse 2s infinite;
 }
 
 @keyframes pulse {
     0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.1); opacity: 0.8; }
+    50% { transform: scale(1.15); opacity: 0.8; }
 }
 
 .flip-clock-meridium a {
-    color: #ecf0f1 !important;
-    font-weight: bold;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    font-size: 24px;
+    color: #f1f5f9 !important;
+    font-weight: 600;
+    text-shadow: 0 3px 5px rgba(0, 0, 0, 0.4);
+    font-size: 26px;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 1px;
 }
 
 /* Add glow effect */
 .flip-clock-wrapper ul:nth-child(odd) {
-    animation: glow-blue 3s ease-in-out infinite alternate;
+    animation: glow-indigo 3s ease-in-out infinite alternate;
 }
 
 .flip-clock-wrapper ul:nth-child(even) {
-    animation: glow-purple 3s ease-in-out infinite alternate;
+    animation: glow-violet 3s ease-in-out infinite alternate;
 }
 
-@keyframes glow-blue {
+@keyframes glow-indigo {
     from { box-shadow: 
-        inset 0 -2px 4px rgba(0, 0, 0, 0.3),
-        inset 0 2px 4px rgba(255, 255, 255, 0.1),
-        0 5px 15px rgba(0, 0, 0, 0.2),
-        0 0 30px rgba(52, 152, 219, 0.3);
+        inset 0 -3px 6px rgba(0, 0, 0, 0.4),
+        inset 0 3px 6px rgba(255, 255, 255, 0.1),
+        0 8px 20px rgba(0, 0, 0, 0.3),
+        0 0 30px rgba(99, 102, 241, 0.3);
     }
     to { box-shadow: 
-        inset 0 -2px 4px rgba(0, 0, 0, 0.3),
-        inset 0 2px 4px rgba(255, 255, 255, 0.1),
-        0 5px 15px rgba(0, 0, 0, 0.2),
-        0 0 30px rgba(52, 152, 219, 0.6);
+        inset 0 -3px 6px rgba(0, 0, 0, 0.4),
+        inset 0 3px 6px rgba(255, 255, 255, 0.1),
+        0 8px 20px rgba(0, 0, 0, 0.3),
+        0 0 30px rgba(99, 102, 241, 0.7);
     }
 }
 
-@keyframes glow-purple {
+@keyframes glow-violet {
     from { box-shadow: 
-        inset 0 -2px 4px rgba(0, 0, 0, 0.3),
-        inset 0 2px 4px rgba(255, 255, 255, 0.1),
-        0 5px 15px rgba(0, 0, 0, 0.2),
-        0 0 30px rgba(155, 89, 182, 0.3);
+        inset 0 -3px 6px rgba(0, 0, 0, 0.4),
+        inset 0 3px 6px rgba(255, 255, 255, 0.1),
+        0 8px 20px rgba(0, 0, 0, 0.3),
+        0 0 30px rgba(139, 92, 246, 0.3);
     }
     to { box-shadow: 
-        inset 0 -2px 4px rgba(0, 0, 0, 0.3),
-        inset 0 2px 4px rgba(255, 255, 255, 0.1),
-        0 5px 15px rgba(0, 0, 0, 0.2),
-        0 0 30px rgba(155, 89, 182, 0.6);
+        inset 0 -3px 6px rgba(0, 0, 0, 0.4),
+        inset 0 3px 6px rgba(255, 255, 255, 0.1),
+        0 8px 20px rgba(0, 0, 0, 0.3),
+        0 0 30px rgba(139, 92, 246, 0.7);
     }
+}
+
+/* Alarm button styling */
+.alarm-btn {
+    top: 148px;
+}
+
+.alarm-btn:hover {
+    background: rgba(249, 115, 22, 0.2);
+    border-color: rgba(249, 115, 22, 0.5);
+    color: #ffb74d;
+    transform: scale(1.08) translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25), 0 0 20px rgba(249, 115, 22, 0.3);
+}
+
+.alarm-btn svg {
+    transition: all 0.3s ease;
+    width: 26px;
+    height: 26px;
+}
+
+/* Prayer button styling */
+.prayer-btn {
+    top: 212px;
+}
+
+.prayer-btn:hover {
+    background: rgba(34, 197, 94, 0.2);
+    border-color: rgba(34, 197, 94, 0.5);
+    color: #86efac;
+    transform: scale(1.08) translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25), 0 0 20px rgba(34, 197, 94, 0.3);
+}
+
+.prayer-btn svg {
+    transition: all 0.3s ease;
+    width: 26px;
+    height: 26px;
+}
+
+/* Date display styling */
+.date-display {
+    margin-top: 34px;
+    text-align: center;
+}
+
+.current-date {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 1.25rem;
+    font-weight: 500;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    letter-spacing: 1.5px;
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    border-radius: 16px;
+    padding: 15px 30px;
+    display: inline-block;
+    animation: dateGlow 4s ease-in-out infinite alternate;
+    font-family: 'Montserrat', sans-serif;
+    transform: translateY(0);
+    transition: all 0.3s ease;
+}
+
+.current-date:hover {
+    transform: translateY(-3px);
+    background: rgba(15, 23, 42, 0.75);
+    border: 1px solid rgba(99, 102, 241, 0.4);
+}
+
+@keyframes dateGlow {
+    from { 
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 255, 255, 0.1);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25), 0 0 15px rgba(99, 102, 241, 0.15);
+    }
+    to { 
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), 0 0 30px rgba(99, 102, 241, 0.25);
+    }
+}
+
+/* Modal styling */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(8px);
+    overflow-y: hidden;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 16px;
+    margin: 10px auto;
+    padding: 0;
+    width: 95%;
+    max-width: 420px;
+    max-height: calc(100vh - 20px);
+    box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.5),
+        0 0 40px rgba(99, 102, 241, 0.2);
+    animation: modalSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-header {
+    padding: 12px 18px;
+    border-bottom: 1px solid rgba(99, 102, 241, 0.15);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(15, 23, 42, 0.8);
+}
+
+.modal-header h2 {
+    color: rgba(255, 255, 255, 0.95);
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 500;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.close {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 28px;
+    font-weight: 300;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    line-height: 0.8;
+    padding: 8px;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close:hover {
+    color: rgba(255, 255, 255, 1);
+    background: rgba(255, 255, 255, 0.1);
+    transform: rotate(90deg);
+}
+
+.modal-body {
+    padding: 16px;
+    color: rgba(255, 255, 255, 0.95);
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Form styling */
+.alarm-form {
+    margin-bottom: 16px;
+}
+
+.form-group {
+    margin-bottom: 14px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.85rem;
+}
+
+input[type="time"], 
+input[type="text"], 
+select {
+    width: 100%;
+    padding: 8px 12px;
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-family: 'Roboto', sans-serif;
+}
+
+input[type="time"]:focus, 
+input[type="text"]:focus, 
+select:focus {
+    border-color: rgba(99, 102, 241, 0.7);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+}
+
+input[type="checkbox"] {
+    margin-right: 10px;
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+    accent-color: #6366f1;
+}
+
+/* Button styling */
+.btn-primary, .btn-secondary {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    margin: 3px;
+    min-width: 90px;
+    text-align: center;
+    letter-spacing: 0.3px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: white;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #4f46e5, #4338ca);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.45);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary:active {
+    transform: translateY(0);
+}
+
+/* Alarm list styling */
+.active-alarms {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(99, 102, 241, 0.15);
+}
+
+.active-alarms h3 {
+    margin-bottom: 10px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.alarm-item {
+    background: rgba(30, 41, 59, 0.6);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.alarm-item:hover {
+    background: rgba(30, 41, 59, 0.8);
+    border-color: rgba(99, 102, 241, 0.35);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.alarm-info {
+    flex: 1;
+}
+
+.alarm-time {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #6366f1;
+    letter-spacing: 0.3px;
+}
+
+.alarm-label {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: 4px;
+}
+
+.alarm-delete {
+    background: linear-gradient(135deg, #f43f5e, #e11d48);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(244, 63, 94, 0.3);
+    letter-spacing: 0.3px;
+}
+
+.alarm-delete:hover {
+    background: linear-gradient(135deg, #e11d48, #be123c);
+    box-shadow: 0 6px 12px rgba(244, 63, 94, 0.4);
+    transform: translateY(-1px);
+}
+
+.alarm-delete:active {
+    transform: translateY(0);
+}
+
+/* Prayer times styling */
+.location-setup {
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(99, 102, 241, 0.15);
+}
+
+.prayer-times-display {
+    background: rgba(30, 41, 59, 0.6);
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.prayer-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(99, 102, 241, 0.15);
+    transition: all 0.3s ease;
+}
+
+.prayer-item:hover {
+    background: rgba(30, 41, 59, 0.4);
+    padding-left: 8px;
+    padding-right: 8px;
+    border-radius: 8px;
+    transform: translateX(3px);
+}
+
+.prayer-item:last-of-type {
+    border-bottom: none;
+}
+
+.prayer-name {
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    letter-spacing: 0.3px;
+    font-size: 0.9rem;
+}
+
+.prayer-time {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #22c55e;
+    letter-spacing: 0.3px;
+}
+
+.next-prayer {
+    margin-top: 16px;
+    padding: 14px;
+    background: rgba(34, 197, 94, 0.15);
+    border: 1px solid rgba(34, 197, 94, 0.4);
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(34, 197, 94, 0.15);
+    animation: nextPrayerGlow 4s ease-in-out infinite alternate;
+}
+
+@keyframes nextPrayerGlow {
+    from { 
+        box-shadow: 0 5px 15px rgba(34, 197, 94, 0.1);
+    }
+    to { 
+        box-shadow: 0 5px 20px rgba(34, 197, 94, 0.25);
+    }
+}
+
+.next-prayer div {
+    margin: 4px 0;
+    font-size: 0.9rem;
+}
+
+.next-prayer span {
+    font-weight: 700;
+    color: #22c55e;
+    letter-spacing: 0.3px;
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
     .clock {
-        padding: 20px;
+        padding: 30px 24px;
         margin: 20px;
+        border-radius: 20px;
     }
     
     .flip-clock-wrapper ul {
@@ -281,9 +725,187 @@ body::before {
         font-size: 60px;
         line-height: 90px;
         margin: 3px;
+        border-radius: 12px;
+    }
+    
+    .flip-clock-wrapper ul li a div div.inn {
+        border-radius: 12px;
+    }
+    
+    .flip-clock-meridium a {
+        font-size: 20px;
+    }
+    
+    .current-date {
+        font-size: 1.1rem;
+        padding: 12px 20px;
+    }
+    
+    .fullscreen-btn, .pip-btn, .alarm-btn, .prayer-btn {
+        width: 48px;
+        height: 48px;
+        top: auto;
+        bottom: 20px;
+        right: auto;
+    }
+    
+    .fullscreen-btn {
+        left: 20px;
+    }
+    
+    .pip-btn {
+        left: 80px;
+    }
+    
+    .alarm-btn {
+        left: 140px;
+    }
+    
+    .prayer-btn {
+        left: 200px;
+    }
+      .modal-content {
+        width: 95%;
+        margin: 10px auto;
+        max-height: calc(100vh - 20px);
+        overflow-y: auto;
+    }
+    
+    .modal-body {
+        padding: 20px;
+        max-height: calc(100vh - 120px);
+        overflow-y: auto;
+    }
+    
+    .form-group input, .form-group select {
+        padding: 10px 12px;
+    }
+      .btn-primary, .btn-secondary {
+        padding: 12px 20px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .clock {
+        padding: 20px 15px;
+        margin: 15px;
+        transform: perspective(1200px) rotateX(1deg);
+    }
+    
+    .flip-clock-wrapper ul {
+        width: 45px;
+        height: 70px;
+        font-size: 48px;
+        line-height: 70px;
+        margin: 2px;
+        border-radius: 10px;
+    }
+    
+    .flip-clock-wrapper ul li a div div.inn {
+        border-radius: 10px;
+    }
+    
+    .flip-clock-dot {
+        width: 6px;
+        height: 6px;
+        margin: 0 4px;
     }
     
     .flip-clock-meridium a {
         font-size: 18px;
     }
+    
+    .current-date {
+        font-size: 1rem;
+        padding: 10px 18px;
+        letter-spacing: 1px;
+    }
+    
+    .fullscreen-btn, .pip-btn, .alarm-btn, .prayer-btn {
+        width: 42px;
+        height: 42px;
+    }
+    
+    .fullscreen-btn svg,
+    .pip-btn svg,
+    .alarm-btn svg,
+    .prayer-btn svg {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .modal-header {
+        padding: 15px 20px;
+    }
+    
+    .modal-body {
+        padding: 18px;
+    }
+    
+    .alarm-item {
+        padding: 12px;
+    }
+    
+    .next-prayer {
+        padding: 18px;
+    }
+}
+
+/* Additional modal improvements */
+.modal-content {
+    position: relative;
+}
+
+/* Improve scrolling on mobile */
+@media (max-width: 480px) {
+    .modal {
+        padding: 10px 0;
+    }
+    
+    .modal-content {
+        width: 98%;
+        margin: 5px auto;
+        border-radius: 15px;
+        max-height: calc(100vh - 10px);
+    }
+    
+    .modal-header {
+        padding: 15px 20px;
+    }
+    
+    .modal-header h2 {
+        font-size: 1.3rem;
+    }
+    
+    .modal-body {
+        padding: 15px;
+        max-height: calc(100vh - 80px);
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .prayer-times-display {
+        padding: 15px;
+    }
+    
+    .next-prayer {
+        padding: 15px;
+    }
+}
+
+/* Ensure proper z-index layering */
+.modal {
+    z-index: 9999;
+}
+
+.fullscreen-btn, .pip-btn, .alarm-btn, .prayer-btn {
+    z-index: 1000;
+}
+
+/* Fix any potential overflow issues */
+body.modal-open {
+    overflow: hidden;
 }
